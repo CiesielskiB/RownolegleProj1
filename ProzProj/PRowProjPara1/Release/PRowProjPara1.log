@@ -1,0 +1,6 @@
+﻿  mainPara1.cpp
+c1xx : warning C4199: dwufazowe wyszukiwanie nazw nie jest obsługiwane w trybie C++/CLI, C++/CX ani OpenMP, użyj wartości /Zc:twoPhase-
+  Trwa generowanie kodu
+  All 9 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Zakończono generowanie kodu
+  PRowProjPara1.vcxproj -> C:\Users\Miket\Desktop\PRow\Proj\RownolegleProj1\ProzProj\Release\PRowProjPara1.exe
