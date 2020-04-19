@@ -103,9 +103,9 @@ int main()
 {
     clock_t start, stop;
     int minNumber = 2;
-    int maxNumber = 20;
+    int maxNumber = 100000000;
     int *test = generateSequence(2, maxNumber);
-    int *result = new int[maxNumber - minNumber + 1];
+    int *result = new int[maxNumber - minNumber + 1]();
 
     start = clock();
     int primesCount = generatePrimesSeq(test, maxNumber - 2 + 1, maxNumber, minNumber, result);

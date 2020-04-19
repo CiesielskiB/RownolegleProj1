@@ -1,0 +1,8 @@
+﻿  ParaFuncMain.cpp
+c1xx : warning C4199: dwufazowe wyszukiwanie nazw nie jest obsługiwane w trybie C++/CLI, C++/CX ani OpenMP, użyj wartości /Zc:twoPhase-
+  Trwa generowanie kodu
+  3 of 9 functions (33.3%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
+  Zakończono generowanie kodu
+  PRowProjPara2.vcxproj -> C:\Users\Miket\Desktop\PRow\Proj\RownolegleProj1\ProzProj\Release\PRowProjPara2.exe
