@@ -5,6 +5,7 @@
         "*.dml": "oracle",
         "*.pks": "oracle",
         "*.pkb": "oracle",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "xlocale": "cpp"
     }
 }

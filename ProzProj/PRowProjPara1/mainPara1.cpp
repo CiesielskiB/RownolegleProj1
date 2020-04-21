@@ -114,7 +114,7 @@ void testDynamicGeneration(int maxNumber, int minNumber, int numOfThreads)
 int main()
 {
 	int minNumber = 2;
-	int maxNumber = 100000000;
+	int maxNumber = 99000000;
 	int numOfThreads = 4;
 
 	testStaticGeneration(maxNumber, minNumber, numOfThreads);
