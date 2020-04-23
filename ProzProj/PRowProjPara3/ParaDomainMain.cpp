@@ -80,7 +80,7 @@ int generatePrimesSeqMultiPara(int table[], int size, int max, int min, int resu
 			result[count++] = temp[i];
 		}
 	}
-
+	delete[] temp;
 	return count;
 }
 
@@ -163,9 +163,64 @@ int generatePrimesSeq(int table[], int size, int max, int min, int result[], int
 			result[count++] = currentNumber;
 		}
 	}
-
+	delete[] temp;
 	return count;
 }
+
+
+int generatePrimesSeqActualDomain(int table[], int size, int max, int min, int result[], int numOfThreads)
+{
+	int *temp = new int[max - min + 1];
+	int primesCount = 0;
+	primesCount = generatePrimesSeq(table, size, (int)sqrt(max), temp);
+	omp_set_num_threads(numOfThreads);
+#pragma omp parallel
+	{
+		int myThreadNum = omp_get_thread_num();
+		int myStartingPoint = 0;
+		int myEndPoint = 0;
+		if(size % numOfThreads == 0){
+			myStartingPoint = (size/numOfThreads) * myThreadNum;
+			myEndPoint = myStartingPoint + (size/numOfThreads) - 1;
+		}else{
+			myStartingPoint = (size/numOfThreads + 1) * myThreadNum;
+			myEndPoint = myStartingPoint + (size/numOfThreads + 1) - 1;
+		}
+		
+		for (int p = 0; p < primesCount; p++)
+		{
+			int prime = temp[p];
+			int i = 0;
+			if(myStartingPoint % prime == 0){
+				i = myStartingPoint/prime;
+			}else{
+				i = myStartingPoint/prime + 1;
+			}
+			if(i == 0){
+				i+=2;
+			}
+			while (prime * i <= myEndPoint + 2)
+			{
+				table[prime * i - 2] = -1;
+				i++;
+			}
+		}
+	}
+
+	int count = 0;
+
+	for (int i = 0; i <= max - 2; i++)
+	{
+		int currentNumber = table[i];
+		if (currentNumber != -1 && currentNumber >= min)
+		{
+			result[count++] = currentNumber;
+		}
+	}
+	delete[] temp;
+	return count;
+}
+
 
 int generatePrimesSeqWithoutUsingPrimes(int table[], int size, int max, int min, int result[], int numOfThreads)
 {
@@ -244,13 +299,13 @@ void testPrimesSeqWithoutUsingPrimes(int maxNumber, int minNumber, int numOfThre
 	int *resultNoPrimes = new int[maxNumber - minNumber + 1]();
 	int *numbers = generateSequence(2, maxNumber);
 	start = clock();
-	int primesCount = generatePrimesSeqWithoutUsingPrimes(numbers, maxNumber - 2 + 1, maxNumber, minNumber, resultNoPrimes, numOfThreads);
+	int primesCount = generatePrimesSeqActualDomain(numbers, maxNumber - 2 + 1, maxNumber, minNumber, resultNoPrimes, numOfThreads);
 	stop = clock();
 	printf("%d\n", primesCount);
 	printf("Czas przetwarzania dla wersji bez generowania liczb pierwszych wynosi %f sekund\n", ((double)(stop - start) / 1000.0));
 
-	delete[] numbers;
-	delete[] resultNoPrimes;
+	//delete[] numbers;
+	//delete[] resultNoPrimes;
 }
 
 
