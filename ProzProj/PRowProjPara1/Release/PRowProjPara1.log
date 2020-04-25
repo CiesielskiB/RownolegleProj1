@@ -1,4 +1,4 @@
-﻿  mainPara1.cpp
+﻿  ParaDividing.cpp
 c1xx : warning C4199: dwufazowe wyszukiwanie nazw nie jest obsługiwane w trybie C++/CLI, C++/CX ani OpenMP, użyj wartości /Zc:twoPhase-
   Trwa generowanie kodu
   7 of 12 functions (58.3%) were compiled, the rest were copied from previous compilation.

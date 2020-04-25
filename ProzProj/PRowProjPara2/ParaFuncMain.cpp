@@ -14,6 +14,25 @@ int *generateSequence(int min, int max)
 	return tab;
 }
 
+void createDivider() {
+	printf("-------------------------------------------------------------------------\n");
+	printf("-------------------------------------------------------------------------\n");
+}
+
+void displayNumbers(int numbers[], int lineSize, int numbersCount) {
+	int numberInLine = 0;
+	for (int i = 0; i < numbersCount; i++) {
+		printf("%d ", numbers[i]);
+		if (numberInLine++ >= lineSize) {
+			printf("\n");
+			numberInLine = 0;
+		}
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////Wiele parallel///////////////////////////////////////////////////////////////////////
 int generatePrimesSeqMultiPara(int table[], int size, int max, int result[], int numOfThreads)
 {
 	int primesCount = 0;
@@ -72,9 +91,13 @@ int generatePrimesSeqMultiPara(int table[], int size, int max, int min, int resu
 			result[count++] = temp[i];
 		}
 	}
-
+	delete[] temp;
 	return count;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////parallel poza rekurencja//////////////////////////////////////////////////////////////////
 
 int generatePrimesSeq(int table[], int size, int max, int result[])
 {
@@ -148,9 +171,13 @@ int generatePrimesSeq(int table[], int size, int max, int min, int result[], int
 			result[count++] = currentNumber;
 		}
 	}
-
+	delete[] temp;
 	return count;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////Parallel poza rekurencja bez liczb pierwszych/////////////////////////////////////////////////////////////////
 
 int generatePrimesSeqWithoutUsingPrimes(int table[], int size, int max, int min, int result[], int numOfThreads)
 {
@@ -190,6 +217,10 @@ int generatePrimesSeqWithoutUsingPrimes(int table[], int size, int max, int min,
 	return count;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////testowanie///////////////////////////////////////////////////////
+
 void testMultiParallelGeneration(int maxNumber, int minNumber, int numOfThreads)
 {
 	clock_t start, stop;
@@ -200,6 +231,8 @@ void testMultiParallelGeneration(int maxNumber, int minNumber, int numOfThreads)
 	stop = clock();
 	printf("%d\n", primesCount);
 	printf("Czas przetwarzania dla parallel w rekurencji (multi para) wynosi %f sekund\n", ((double)(stop - start) / 1000.0));
+	printf("predkosc dla parallel w rekurencji (multi para) wynosi %f liczb na sekunde\n", (maxNumber - minNumber + 1) / ((double)(stop - start) / 1000.0));
+	createDivider();
 
 	delete[] numbers;
 	delete[] resultMultiPara;
@@ -215,6 +248,8 @@ void testAfterRecursionParallellGeneration(int maxNumber, int minNumber, int num
 	stop = clock();
 	printf("%d\n", primesCount);
 	printf("Czas przetwarzania dla parallel po rekurencj wynosi %f sekund\n", ((double)(stop - start) / 1000.0));
+	printf("predkosc dla parallel po rekurencj wynosi %f liczb na sekunde\n", (maxNumber - minNumber + 1) / ((double)(stop - start) / 1000.0));
+	createDivider();
 
 	delete[] numbers;
 	delete[] resultOneParallel;
@@ -230,15 +265,19 @@ void testPrimesSeqWithoutUsingPrimes(int maxNumber, int minNumber, int numOfThre
 	stop = clock();
 	printf("%d\n", primesCount);
 	printf("Czas przetwarzania dla wersji bez generowania liczb pierwszych wynosi %f sekund\n", ((double)(stop - start) / 1000.0));
+	printf("predkosc dla wersji bez generowania liczb pierwszych wynosi %f liczb na sekunde\n", (maxNumber - minNumber + 1) / ((double)(stop - start) / 1000.0));
+	createDivider();
 
 	delete[] numbers;
 	delete[] resultNoPrimes;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int main()
 {
 	int minNumber = 2;
-	int maxNumber = 99000000;
+	int maxNumber = 95000000;
 	int numOfThreads = 4;
 
 	testMultiParallelGeneration(maxNumber, minNumber, numOfThreads);

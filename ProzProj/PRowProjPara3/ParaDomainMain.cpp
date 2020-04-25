@@ -14,6 +14,24 @@ int *generateSequence(int min, int max)
 	return tab;
 }
 
+void createDivider() {
+	printf("-------------------------------------------------------------------------\n");
+	printf("-------------------------------------------------------------------------\n");
+}
+
+void displayNumbers(int numbers[], int lineSize, int numbersCount) {
+	int numberInLine = 0;
+	for (int i = 0; i < numbersCount; i++) {
+		printf("%d ", numbers[i]);
+		if (numberInLine++ >= lineSize) {
+			printf("\n");
+			numberInLine = 0;
+		}
+	}
+}
+
+
+///////////////////////////////////////////////////////////////parallel wenątrzn rekurencji, błędny domenowy/////////////////////////////////////////////////////////////////////
 int generatePrimesSeqMultiPara(int table[], int size, int max, int result[],  int numOfThreads)
 {
 	int primesCount = 0;
@@ -83,6 +101,10 @@ int generatePrimesSeqMultiPara(int table[], int size, int max, int min, int resu
 	delete[] temp;
 	return count;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////parallel poza rekuręcją, błędny domenowy/////////////////////////////////////////////////////////////////////
 
 int generatePrimesSeq(int table[], int size, int max, int result[])
 {
@@ -167,6 +189,10 @@ int generatePrimesSeq(int table[], int size, int max, int min, int result[], int
 	return count;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////parallel użyty bez wynajdywania liczb pierwszych/////////////////////////////////////////////////////////////////////
+
 int generatePrimesSeqWithoutUsingPrimes(int table[], int size, int max, int min, int result[], int numOfThreads)
 {
 	omp_set_num_threads(numOfThreads);
@@ -208,6 +234,9 @@ int generatePrimesSeqWithoutUsingPrimes(int table[], int size, int max, int min,
 	return count;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////parallel poza rekurencją, poprawny domenowy/////////////////////////////////////////////////////////////////////
 
 int generatePrimesSeqActualDomain(int table[], int size, int max, int result[]){
 	int primesCount = 0;
@@ -301,6 +330,9 @@ int generatePrimesSeqActualDomain(int table[], int size, int max, int min, int r
 	return count;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////parallel poza rekurencją, poprawny domenowy bez liczb pierwszych/////////////////////////////////////////////////////////////////////
 int generatePrimesSeqActualDomainWithoutUsingPrimes(int table[], int size, int max, int min, int result[], int numOfThreads)
 {
 	omp_set_num_threads(numOfThreads);
@@ -352,6 +384,10 @@ int generatePrimesSeqActualDomainWithoutUsingPrimes(int table[], int size, int m
 	return count;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////Testy/////////////////////////////////////////////////////////////////////
+
 void testMultiParallelGeneration(int maxNumber, int minNumber, int numOfThreads)
 {
 	clock_t start, stop;
@@ -361,7 +397,9 @@ void testMultiParallelGeneration(int maxNumber, int minNumber, int numOfThreads)
 	int primesCount = generatePrimesSeqMultiPara(numbers, maxNumber - 2 + 1, maxNumber, minNumber, resultMultiPara, numOfThreads);
 	stop = clock();
 	printf("%d\n", primesCount);
-	printf("Czas przetwarzania dla parallel w rekurencji (multi para) wynosi %f sekund\n", ((double)(stop - start) / 1000.0));
+	printf("Czas przetwarzania dla parallel w rekurencji (multi para) z rozdawaniem mnoznikow wynosi %f sekund\n", ((double)(stop - start) / 1000.0));
+	printf("predkosc dla parallel w rekurencji (multi para) z rozdawaniem mnoznikow wynosi %ld liczb na sekunde\n", (long)((maxNumber - minNumber + 1) / ((double)(stop - start) / 1000.0)));
+	createDivider();
 
 	delete[] numbers;
 	delete[] resultMultiPara;
@@ -376,7 +414,10 @@ void testAfterRecursionParallellGeneration(int maxNumber, int minNumber, int num
 	int primesCount = generatePrimesSeq(numbers, maxNumber - 2 + 1, maxNumber, minNumber, resultOneParallel, numOfThreads);
 	stop = clock();
 	printf("%d\n", primesCount);
-	printf("Czas przetwarzania dla parallel po rekurencj wynosi %f sekund\n", ((double)(stop - start) / 1000.0));
+	printf("Czas przetwarzania dla wersji parallel po rekurencj z rozdawaniem mnoznikow wynosi %f sekund\n", ((double)(stop - start) / 1000.0));
+	printf("predkosc dla wersji parallel po rekurencj z rozdawaniem mnoznikow wynosi %ld liczb na sekunde\n", (long)((maxNumber - minNumber + 1) / ((double)(stop - start) / 1000.0)));
+	createDivider();
+
 
 	delete[] numbers;
 	delete[] resultOneParallel;
@@ -391,7 +432,9 @@ void testPrimesSeqWithoutUsingPrimes(int maxNumber, int minNumber, int numOfThre
 	int primesCount = generatePrimesSeqWithoutUsingPrimes(numbers, maxNumber - 2 + 1, maxNumber, minNumber, resultNoPrimes, numOfThreads);
 	stop = clock();
 	printf("%d\n", primesCount);
-	printf("Czas przetwarzania dla wersji bez generowania liczb pierwszych wynosi %f sekund\n", ((double)(stop - start) / 1000.0));
+	printf("Czas przetwarzania dla wersji z rozdawaniem mnoznikow bez generowania liczb pierwszych wynosi %f sekund\n", ((double)(stop - start) / 1000.0));
+	printf("predkosc dla wersji z rozdawaniem mnoznikow bez generowania liczb pierwszych wynosi %ld liczb na sekunde\n", (long)((maxNumber - minNumber + 1) / ((double)(stop - start) / 1000.0)));
+	createDivider();
 
 	delete[] numbers;
 	delete[] resultNoPrimes;
@@ -402,37 +445,45 @@ void testPrimesSeqWithoutUsingPrimes(int maxNumber, int minNumber, int numOfThre
 void testPrimesSeqWithActualDomain(int maxNumber, int minNumber, int numOfThreads)
 {
 	clock_t start, stop;
-	int *resultNoPrimes = new int[maxNumber - minNumber + 1]();
+	int *resultDomain = new int[maxNumber - minNumber + 1]();
 	int *numbers = generateSequence(2, maxNumber);
 	start = clock();
-	int primesCount = generatePrimesSeqActualDomain(numbers, maxNumber - 2 + 1, maxNumber, minNumber, resultNoPrimes, numOfThreads);
+	int primesCount = generatePrimesSeqActualDomain(numbers, maxNumber - 2 + 1, maxNumber, minNumber, resultDomain, numOfThreads);
 	stop = clock();
 	printf("%d\n", primesCount);
-	printf("Czas przetwarzania dla wersji domenowej liczb pierwszych wynosi %f sekund\n", ((double)(stop - start) / 1000.0));
+	printf("Czas przetwarzania dla wersji domenowej z liczbami pierwszymi wynosi %f sekund\n", ((double)(stop - start) / 1000.0));
+	printf("predkosc dla wersji domenowej z liczbami pierwszymi wynosi %ld liczb na sekunde\n", (long)((maxNumber - minNumber + 1) / ((double)(stop - start) / 1000.0)));
+	createDivider();
+
 
 	delete[] numbers;
-	delete[] resultNoPrimes;
+	delete[] resultDomain;
 }
 
 void testPrimesSeqWithActualDomainNoPrimes(int maxNumber, int minNumber, int numOfThreads)
 {
 	clock_t start, stop;
-	int *resultNoPrimes = new int[maxNumber - minNumber + 1]();
+	int *resultDomainNoPrimes = new int[maxNumber - minNumber + 1]();
 	int *numbers = generateSequence(2, maxNumber);
 	start = clock();
-	int primesCount = generatePrimesSeqActualDomainWithoutUsingPrimes(numbers, maxNumber - 2 + 1, maxNumber, minNumber, resultNoPrimes, numOfThreads);
+	int primesCount = generatePrimesSeqActualDomainWithoutUsingPrimes(numbers, maxNumber - 2 + 1, maxNumber, minNumber, resultDomainNoPrimes, numOfThreads);
 	stop = clock();
 	printf("%d\n", primesCount);
-	printf("Czas przetwarzania dla wersji domenowej liczb pierwszych bez u�ywania liczb pierwszych wynosi %f sekund\n", ((double)(stop - start) / 1000.0));
+	printf("Czas przetwarzania dla wersji domenowej liczb pierwszych bez uzywania liczb pierwszych wynosi %f sekund\n", ((double)(stop - start) / 1000.0));
+	printf("predkosc dla wersji domenowej liczb pierwszych bez uzywania liczb pierwszych wynosi %ld liczb na sekunde\n", (long)((maxNumber - minNumber + 1) / ((double)(stop - start) / 1000.0)));
+	createDivider();
+
 
 	delete[] numbers;
-	delete[] resultNoPrimes;
+	delete[] resultDomainNoPrimes;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main()
 {
 	int minNumber = 2;
-	int maxNumber = 99000000;
+	int maxNumber = 9500000;
 	int numOfThreads = 4;
 
 	testMultiParallelGeneration(maxNumber, minNumber, numOfThreads);
