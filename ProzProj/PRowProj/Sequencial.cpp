@@ -129,6 +129,8 @@ void testSieveGeneration(int maxNumber, int minNumber)
 	stop = clock();
 	printf("%d\n", primesCount);
 	printf("Czas przetwarzania sita w rekurencji wynosi %f sekund\n", ((double)(stop - start) / 1000.0));
+	printf("predkosc sita wynosi %f liczb na sekunde\n", (maxNumber - minNumber + 1) / ((double)(stop - start) / 1000.0));
+
 	createDivider();
 
 
@@ -145,6 +147,8 @@ void testDivitingGeneration(int maxNumber, int minNumber)
 	stop = clock();
 	printf("%d\n", primesCount);
 	printf("Czas przetwarzania dla dzielenia wynosi %f sekund\n", ((double)(stop - start) / 1000.0));
+	printf("predkosc dzielenia wynosi %f liczb na sekunde\n", (maxNumber - minNumber + 1) / ((double)(stop - start) / 1000.0));
+
 	createDivider();
 
 

@@ -120,7 +120,7 @@ void testStaticGeneration(int maxNumber, int minNumber, int numOfThreads)
 
 	printf("%d\n", primesCount);
 	printf("Czas przetwarzania statycznego wynosi %f sekund\n", ((double)(stop - start) / 1000.0));
-	printf("prêdkosc statycznego wynosi %f liczb na sekunde\n", (maxNumber - minNumber + 1)/ ((double)(stop - start) / 1000.0));
+	printf("predkosc statycznego wynosi %f liczb na sekunde\n", (maxNumber - minNumber + 1)/ ((double)(stop - start) / 1000.0));
 	createDivider();
 
 	delete[] resultStatic;
